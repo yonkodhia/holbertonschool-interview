@@ -1,43 +1,83 @@
 #!/usr/bin/python3
-"""nqueens function """
-
+"""
+The N queens puzzle is the challenge of placing
+N non-attacking queens on an N×N chessboard.
+A program that solves the N queens problem.
+"""
 import sys
 
 
 if len(sys.argv) != 2:
     print("Usage: nqueens N")
     exit(1)
+
 try:
-    board = int(sys.argv[1])
-except ValueError:
+    int(sys.argv[1])
+except Exception:
     print("N must be a number")
     exit(1)
-if board < 4:
+
+if not isinstance(int(sys.argv[1]), int):
+    print("N must be a number")
+    exit(1)
+
+if int(sys.argv[1]) < 4:
     print("N must be at least 4")
     exit(1)
 
 
-def chest(board, place1, solders):
-    """function of nqueens"""
-    for x in range(board):
-        col = 0
-        for quen in solders:
-            if x == quen[1]:
-                col = 1
-                break
-            if place1 - x == quen[0] - quen[1]:
-                col = 1
-                break
-            if x - quen[1] == quen[0] - place1:
-                col = 1
-                break
-        if col == 0:
-            solders.append([place1, x])
-            if place1 != board - 1:
-                chest(board, place1 + 1, solders)
-            else:
-                print(solders)
-            del solders[-1]
+n = int(sys.argv[1])
 
 
-chest(board, 0, [])
+def solveNQueens(n):
+    """ program that solves the N queens problem """
+    solutions = []
+    state = []
+    search(state, solutions, n)
+    return solutions
+
+
+def is_valid_state(state, n):
+    """ check if it is a valid solution """
+    return len(state) == n
+
+
+def get_candidates(state, n):
+    """
+    find the next position in the state to populate
+    prune down candidates that place the queen into attacks
+    """
+    if not state:
+        return range(n)
+    position = len(state)
+    candidates = set(range(n))
+    for row, col in enumerate(state):
+        candidates.discard(col)
+        dist = position - row
+        candidates.discard(col + dist)
+        candidates.discard(col - dist)
+    return candidates
+
+
+def search(state, solutions, n):
+    """ search for a safe place to the queens """
+    if is_valid_state(state, n):
+        state_string = state_to_coor(state)
+        solutions.append(state_string)
+        return
+    candidates = get_candidates(state, n)
+    for candidate in candidates:
+        state.append(candidate)
+        search(state, solutions, n)
+        state.remove(candidate)
+
+
+def state_to_coor(state):
+    """ create the required format for output"""
+    ret = []
+    for x, y in enumerate(state):
+        ret.append([x, y])
+    return ret
+
+for solution in solveNQueens(n):
+    print(solution)
