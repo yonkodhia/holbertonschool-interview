@@ -1,19 +1,23 @@
 #!/usr/bin/python3
-"""calculate how many square units of water"""
+""" Rain """
 
 
 def rain(walls):
-    """def rain function"""
-    counterWidth = 0
-    Square = 0
-    i = 1
-    while (i < len(walls) - 1):
-        left = walls[i]
-        for j in range(i):
-            left = max(left, walls[j])
-        right = walls[i]
-        for counter in range(i + 1, len(walls)):
-            right = max(right, walls[counter])
-        Square += (min(left, right) - walls[i])
-        i += 1
-    return  Square
+    """ Rain """
+    if walls is None:
+        return 0
+    indexLeft = 0
+    indexRight = len(walls) - 1
+    leftMax = 0
+    rightMax = 0
+    rainwater = 0
+    while (indexLeft <= indexRight):
+        leftMax = max(leftMax, walls[indexLeft])
+        rightMax = max(rightMax, walls[indexRight])
+        if leftMax < rightMax:
+            rainwater += leftMax - walls[indexLeft]
+            indexLeft += 1
+        else:
+            rainwater += rightMax - walls[indexRight]
+            indexRight -= 1
+    return rainwater
