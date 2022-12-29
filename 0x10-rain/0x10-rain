@@ -16,4 +16,4 @@ def rain(walls):
             right = max(right, walls[counter])
         Square += (min(left, right) - walls[i])
         i += 1
-    return 
+    return  Square
